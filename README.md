@@ -6,10 +6,19 @@ A T7(thermal imaging) helmet which is implemented by depth-estimation network
 
 # 1.0 Bill of Material(物料清单)
 
-  1 Jetson Nano B01 <link>https://details.jd.com/normal/item.action?orderid=3472435016159248&PassKey=F07F3CAEBFFA68677D6D81FA33E68805</link>
+  1 Jetson Nano B01 <link>https://item.jd.com/10095352326438.html?pcdk=okpP8EdI4cQhlfJysD8SUkQ3jXVOLvdcmq9xfuqnAWXciSeswRLTJkD_wBENtSj5.NnCI.sen1</link>
   
-  2 12V锂电池 <link>https://details.jd.com/normal/item.action?orderid=3456435011913543&PassKey=AE8D6EFD30ED974071CCC0C88147564B</link>
+  2 12V锂电池 12V lithium battery <link>https://item.jd.com/10205921319856.html?pcdk=iVwF_6NHmg1KKE4wcrhXKg1ltV9r1WqVDn7fks91iQydIV6Uabkbo3ir1fv04Hkc.icfn.3eJH</link>
 
-  3 降压模块 <link>https://item.jd.com/10102320683824.html?pcdk=8UjAr8z0z-nQQm6zcYy4nr7GEpzMHFJg8t6b27kjb_c0fN9sEcXKg9lYf45YT1mM.icfn.3eJH</link>
+  3 降压模块 / voltage transformation unit <link>https://item.jd.com/10102320683824.html?pcdk=8UjAr8z0z-nQQm6zcYy4nr7GEpzMHFJg8t6b27kjb_c0fN9sEcXKg9lYf45YT1mM.icfn.3eJH</link>
    
-  4 USB摄像头 <link>https://item.jd.com/10039679882443.html?pcdk=Uw7ZT24hUEn5XpAu-NRn1NA9hulU-WqKM2VChE20va7n0dWEPLIKZ5hiBpjsrN-n.3z6a.aI3x&spmTag=YTAyNDAuYjAwMjQ5My5jMDAwMDQwMjcuMyUyM3NrdV9jYXJkJTQwMTc4NDI2NDIyNTA5NiUyMzE3NTc0OTk1MjI2Mjk2ODI2OTcxNzclMjMyMDg5ODUzMzQy</link>
+  4 USB摄像头 USB camera <link>https://item.jd.com/10039679882443.html?pcdk=Uw7ZT24hUEn5XpAu-NRn1NA9hulU-WqKM2VChE20va7n0dWEPLIKZ5hiBpjsrN-n.3z6a.aI3x&spmTag=YTAyNDAuYjAwMjQ5My5jMDAwMDQwMjcuMyUyM3NrdV9jYXJkJTQwMTc4NDI2NDIyNTA5NiUyMzE3NTc0OTk1MjI2Mjk2ODI2OTcxNzclMjMyMDg5ODUzMzQy</link>
+
+  5.头部支架 Head Brace<link>https://item.jd.com/10210901961928.html?pcdk=v3mp5eVnQXD98_liORHR61pYQOtd6BkgfrEMfXtyPm7-SuChZPm_TpsZBzffZHM4.NnCI.sen1</link>
+
+  另外你可能需要打孔器，螺丝钉，螺母，用于固定各零件。Aditionally,you might need drill,screw,nut to fix every parts
+
+
+# 2.0
+
+  
