@@ -6,7 +6,31 @@ A T7(thermal imaging) helmet which is implemented by depth-estimation network
 
 # 0.0 介绍 introduction
 
-  成品展示抖音![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white)<link>https://v.douyin.com/elDdhLb8Omg/</link>
+  成品展示抖音![抖音/douyin](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=TikTok&logoColor=white)<link>https://v.douyin.com/elDdhLb8Omg/</link>
+
+  另外，如果你对计算机视觉感兴趣的话不妨去这个仓库看看<link>https://github.com/DepthAnything/Depth-Anything-V2<link/>
+
+  即：该项目用到的视觉神经网络
+
+  In addition, if you are interested in computer vision, you might as well take a look at this repository <link>https://github.com/DepthAnything/Depth-Anything-V2<link/>.
+
+That is, the visual neural network used in this project.
+
+  
+
+> @article{depth_anything_v2,
+  title={Depth Anything V2},
+  author={Yang, Lihe and Kang, Bingyi and Huang, Zilong and Zhao, Zhen and Xu, Xiaogang and Feng, Jiashi and Zhao, Hengshuang},
+  journal={arXiv:2406.09414},
+  year={2024}
+}
+
+> @inproceedings{depth_anything_v1,
+  title={Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data}, 
+  author={Yang, Lihe and Kang, Bingyi and Huang, Zilong and Xu, Xiaogang and Feng, Jiashi and Zhao, Hengshuang},
+  booktitle={CVPR},
+  year={2024}
+} 
 
 # 1.0 Bill of Material(物料清单)
 
