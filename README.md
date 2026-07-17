@@ -4,6 +4,10 @@ A T7(thermal imaging) helmet which is implemented by depth-estimation network
 一个用深度估计网络(Depth-Anything-V2)实现的T7(热成像)头盔
 <img width="588" height="271" alt="41ede178a8718691f44271fcf4cec85a" src="https://github.com/user-attachments/assets/428cb9ef-4307-4e57-bf65-4038b7e98d3e" /><img width="588" height="271" alt="fd3d980edc4d06dd6d532a10d3f31f59" src="https://github.com/user-attachments/assets/11e36669-ac85-474b-b07b-93cd58d5b2eb" />
 
+# 0.0 介绍 introduction
+
+  成品展示抖音![TikTok](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=tiktok&logoColor=white)<link>https://v.douyin.com/elDdhLb8Omg/</link>
+
 # 1.0 Bill of Material(物料清单)
 
   1 Jetson Nano B01 <link>https://item.jd.com/10095352326438.html?pcdk=okpP8EdI4cQhlfJysD8SUkQ3jXVOLvdcmq9xfuqnAWXciSeswRLTJkD_wBENtSj5.NnCI.sen1</link>
