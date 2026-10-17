@@ -1,0 +1,4 @@
+-r requirements.txt
+onnxruntime>=1.8
+# Export on the development machine only:
+onnx>=1.10

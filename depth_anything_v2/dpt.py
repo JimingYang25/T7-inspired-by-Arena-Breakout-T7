@@ -2,7 +2,6 @@ import cv2
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision.transforms import Compose
 
 from .dinov2 import DINOv2
 from .util.blocks import FeatureFusionBlock, _make_scratch
@@ -194,7 +193,7 @@ class DepthAnythingV2(nn.Module):
         return depth.cpu().numpy()
     
     def image2tensor(self, raw_image, input_size=518):        
-        transform = Compose([
+        transform = [
             Resize(
                 width=input_size,
                 height=input_size,
@@ -206,16 +205,19 @@ class DepthAnythingV2(nn.Module):
             ),
             NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             PrepareForNet(),
-        ])
+        ]
         
         h, w = raw_image.shape[:2]
         
         image = cv2.cvtColor(raw_image, cv2.COLOR_BGR2RGB) / 255.0
         
-        image = transform({'image': image})['image']
+        sample = {'image': image}
+        for operation in transform:
+            sample = operation(sample)
+        image = sample['image']
         image = torch.from_numpy(image).unsqueeze(0)
         
-        DEVICE = 'cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu'
-        image = image.to(DEVICE)
+        parameter = next(self.parameters())
+        image = image.to(device=parameter.device, dtype=parameter.dtype)
         
         return image, (h, w)

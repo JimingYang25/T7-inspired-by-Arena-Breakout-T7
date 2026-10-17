@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "contract": {
+    "architecture": "dualtac_depth_model",
+    "parameters": 937227,
+    "input_size_hw": [
+      240,
+      320
+    ],
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "metric_range_m": [
+      0.2,
+      1.0
+    ],
+    "near_threshold_m": 0.4,
+    "checkpoint_sha256": "a3a9f8fac57f563a1eb34d1c70488d4b51f2298e919bda55c9e34482375e1407",
+    "model_source_sha256": "d9063845dc374126930f5e8fa18fad143f82cb43e7f8933b2fea7980a920e889",
+    "output_layout": "NCHW",
+    "output_channels": [
+      "inverse_depth_unit",
+      "near_logits"
+    ]
+  },
+  "onnx_sha256": "a90c247c3f0d820ec8dce41f0866c9c6b2d1a78eace20ac49f5bbca3ae7971f2",
+  "opset": 13,
+  "torch": "2.11.0+cu128",
+  "verification": {
+    "status": "passed",
+    "scope": "raw output parity, not depth accuracy or Jetson qualification",
+    "synthetic_cases": 2,
+    "max_abs_errors": [
+      2.1457672119140625e-05,
+      0.0001373291015625
+    ],
+    "rtol": 0.001,
+    "atol": 0.0001,
+    "onnxruntime": "1.31.0"
+  }
+}

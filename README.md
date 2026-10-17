@@ -1,97 +1,110 @@
-# T7-inspired-by-Arena-Breakout-T7
-A T7(thermal imaging) helmet which is implemented by depth-estimation network 
+# T7 轻量近场深度感知与 Jetson 部署
 
-一个用深度估计网络(Depth-Anything-V2)实现的T7(热成像)头盔
-<img width="588" height="271" alt="41ede178a8718691f44271fcf4cec85a" src="https://github.com/user-attachments/assets/428cb9ef-4307-4e57-bf65-4038b7e98d3e" /><img width="588" height="271" alt="fd3d980edc4d06dd6d532a10d3f31f59" src="https://github.com/user-attachments/assets/11e36669-ac85-474b-b07b-93cd58d5b2eb" />
+将游戏 T7 的视觉灵感落到一个 RGB 摄像头驱动的可穿戴深度感知原型：摄像头采集、轻量网络推理、固定尺度显示，以及可复核的性能报告。
 
-# 0.0 介绍 introduction
+当前主线接入已有 **DualTacV2 V6 深度网络，937,227 参数，训练输入 320×240**。模型输出固定范围逆深度与近场 logits，解码范围 **0.20–1.00 m**，训练近场边界 **0.40 m**。显示颜色代表模型估计的深度，不表示温度；更换相机或应用场景后需要真实近场标定与验证。
 
-  成品展示抖音![抖音/douyin](https://img.shields.io/badge/TikTok-000000?style=flat-square&logo=TikTok&logoColor=white)<link>https://v.douyin.com/elDdhLb8Omg/</link>
+[历史成品展示](https://v.douyin.com/elDdhLb8Omg/) · [Jetson 部署](docs/JETSON.md) · [测量口径](docs/BENCHMARK.md) · [本机验收](docs/VALIDATION.md) · [简历表述](docs/PORTFOLIO.md)
 
-  另外，如果你对计算机视觉感兴趣的话不妨去这个仓库看看<link>https://github.com/DepthAnything/Depth-Anything-V2<link/>
+> 历史视频展示原始 Depth Anything 版本的物理原型，不代表本次轻量模型已在 B01 上重新验收。原始项目说明保存在 [ORIGINAL_README.md](docs/ORIGINAL_README.md)。
 
-  即：该项目用到的视觉神经网络
+## 运行链路
 
-  In addition, if you are interested in computer vision, you might as well take a look at this repository <link>https://github.com/DepthAnything/Depth-Anything-V2<link/>.
-
-That is, the visual neural network used in this project.
-
-  
-
-> @article{depth_anything_v2,
-  title={Depth Anything V2},
-  author={Yang, Lihe and Kang, Bingyi and Huang, Zilong and Zhao, Zhen and Xu, Xiaogang and Feng, Jiashi and Zhao, Hengshuang},
-  journal={arXiv:2406.09414},
-  year={2024}
-}
-
-> @inproceedings{depth_anything_v1,
-  title={Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data}, 
-  author={Yang, Lihe and Kang, Bingyi and Huang, Zilong and Xu, Xiaogang and Feng, Jiashi and Zhao, Hengshuang},
-  booktitle={CVPR},
-  year={2024}
-} 
-
-# 1.0 Bill of Material(物料清单)
-
-  1 Jetson Nano B01 <link>https://item.jd.com/10095352326438.html?pcdk=okpP8EdI4cQhlfJysD8SUkQ3jXVOLvdcmq9xfuqnAWXciSeswRLTJkD_wBENtSj5.NnCI.sen1</link>
-  
-  2 12V锂电池 12V lithium battery <link>https://item.jd.com/10205921319856.html?pcdk=iVwF_6NHmg1KKE4wcrhXKg1ltV9r1WqVDn7fks91iQydIV6Uabkbo3ir1fv04Hkc.icfn.3eJH</link>
-
-  3 降压模块 / voltage transformation unit <link>https://item.jd.com/10102320683824.html?pcdk=8UjAr8z0z-nQQm6zcYy4nr7GEpzMHFJg8t6b27kjb_c0fN9sEcXKg9lYf45YT1mM.icfn.3eJH</link>
-   
-  4 USB摄像头 USB camera <link>https://item.jd.com/10039679882443.html?pcdk=Uw7ZT24hUEn5XpAu-NRn1NA9hulU-WqKM2VChE20va7n0dWEPLIKZ5hiBpjsrN-n.3z6a.aI3x&spmTag=YTAyNDAuYjAwMjQ5My5jMDAwMDQwMjcuMyUyM3NrdV9jYXJkJTQwMTc4NDI2NDIyNTA5NiUyMzE3NTc0OTk1MjI2Mjk2ODI2OTcxNzclMjMyMDg5ODUzMzQy</link>
-
-  5.头部支架 Head Brace<link>https://item.jd.com/10210901961928.html?pcdk=v3mp5eVnQXD98_liORHR61pYQOtd6BkgfrEMfXtyPm7-SuChZPm_TpsZBzffZHM4.NnCI.sen1</link>
-
-  另外你可能需要打孔器，螺丝钉，螺母，用于固定各零件。Aditionally,you might need drill,screw,nut to fix every parts
-
-
-# 2.0 文件传递和运行
-当你按照jetson nano b01的文档完成烧录以及支架的设计和固定后，再考虑进行这一步
-
-打开你本地电脑的终端(cmd）
-
-Proceed to this step only after you finish flashing the system and designing and installing the bracket in accordance with the Jetson Nano B01 documentation.
-Open the terminal (cmd) on your local computer.
-
-输入(key in):
-```cmd
-scp <Windows下载目录>/T7-inspired-by-Arena-Breakout-T7-main.zip jetson的用户名@<Jetson IP地址>:<Jetson目标路径>
+```mermaid
+flowchart LR
+  A[USB 相机或图像视频] --> B[BGR转RGB 归一化 320乘240]
+  B --> C[本地DualTac模型 或 ONNX Runtime]
+  C --> D[固定范围深度与近场概率]
+  D --> E[显示 PNG AVI NPZ]
+  C --> F[逐帧耗时和JSON报告]
 ```
 
-然后开机jetson nano b01 , 在它的终端里输入(Then power on the Jetson Nano B01 and type commands in its terminal):
+| 能力 | 当前实现 |
+|---|---|
+| 轻量模型接入 | 从本地源码和干净 checkpoint 严格加载，核查架构、参数、归一化与输出契约 |
+| PyTorch | CPU FP32、CUDA FP32/FP16；显式设备选择和 CUDA 同步计时 |
+| ONNX | 固定形状 FP32 导出、opset 13、可选 ORT 数值一致性检查、文件及契约校验 |
+| 输入输出 | 摄像头、单图、视频；原图与深度并排、深度图、近场概率叠加、PNG、AVI、末帧数值 NPZ |
+| 性能报告 | warmup 分离、每帧样本、mean/p50/p95、pipeline FPS、软件环境与模型 SHA256 |
+| 测试 | 无私有权重也能运行的数值／视频／输出测试，以及可选真实 checkpoint 测试 |
+
+## 模型资产边界
+
+DualTacV2 的模型实现与训练权重由本地工程提供，**本次改造不分发这些私有资产**。运行 PyTorch 路线需要合法取得包含下列文件的工程：
+
+```text
+DualTacV2/
+  src/depth_encoder_decoder.py
+  checkpoints/depth_pretrained.pt
+```
+
+没有这些资产也可以运行部署管线单元测试。部署到板端时，可以在开发机导出 ONNX 与契约 JSON，再按自己的资产权限传到设备。`models/`、`artifacts/`、`runs/` 和新权重文件均被 Git 忽略。
+
+历史 `depth_anything_v2/` 与已跟踪的 ViT-S checkpoint 保留用于溯源，不是当前主线运行依赖。相关来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+## 快速开始
+
+先准备匹配设备的 PyTorch。桌面可按自己的 CPU/CUDA 环境安装；Jetson 必须匹配 JetPack，详见 [板端说明](docs/JETSON.md)。其余运行依赖：
+
 ```bash
-unzip <Jetson目标路径> <解压后目标路径>
-
-cd <解压后目标路径>/T7-inspired-by-Arena-Breakout-T7-main
-
-#在你python前需要安装pytorch,opencv2
-python3 ./work.py
+python -m pip install -r requirements.txt
+python work.py --help
 ```
 
-然后你就可以看到一个深度图像窗口 Then you can see a depth image window
+没有桌面显示时，可用 `opencv-python-headless` 代替 `opencv-python`，不要在同一环境混装二者。
 
-<img width="1039" height="681" alt="b6695460d689a4241c00e39beee48bb2" src="https://github.com/user-attachments/assets/186c5e4d-150d-4638-a2f6-37efb27b567b" />
+Windows 开发机连接当前本地工程：
 
-# 3.0 补充和提示 finally and hints
+```powershell
+python work.py --dualtac-root "D:\Desktop\DualTacV2" --source 0 --device cuda --report runs/camera.json
+```
 
-这个仓库只有最关键的部分的说明，支架/泛化代码的设计需要各位自由发挥
+Linux/Jetson 已有可用 PyTorch 环境：
 
-不会的部分问AI,问AI,问AI！！！！！！
+```bash
+python3 work.py --dualtac-root /path/to/DualTacV2 --source 0 --device cuda --report runs/camera.json
+```
 
-请有嵌入式的基础知识再做这个项目，别冲动消费!!!!!!
+按 `q` 或 `Esc` 退出。默认使用全部视频／摄像头帧；单张图像默认推理一次。`--frames 300` 可限定测量帧数；`--width` 和 `--height` 是相机请求尺寸，网络输入来自 checkpoint，不随采集尺寸自动变大。
 
-如实在需要鄙人帮助，请私信我的抖音哈!!!顺便帮我点点这个仓库的star，非常感谢!!!
+### 图像 视频与无窗口运行
 
-This repository only contains documentation for its most critical components; everyone needs to design the bracket and generalization code independently as they see fit.
+```bash
+python work.py --dualtac-root /path/to/DualTacV2 --source example.jpg --headless --output runs/depth.png --save-depth runs/depth.npz --report runs/image.json
+python work.py --dualtac-root /path/to/DualTacV2 --source example.avi --headless --frames 300 --output runs/preview.avi --report runs/video.json
+```
 
+`--view near` 显示 near head 概率≥0.5 的区域；它是训练任务输出，不是标定后的可信度或自动安全告警。NPZ 中深度单位是米，尺寸为网络输出 240×320，而可视化会缩放到捕获尺寸。
 
-Ask the AI for help with any parts you don’t understand,ask the AI,ask the AI, ask the AI!!!!!!
+### 导出 ONNX 并验证
 
+```bash
+python -m pip install -r requirements-onnx.txt
+python -m t7_vision.export --dualtac-root /path/to/DualTacV2 --output artifacts/dualtac_v6_fp32.onnx --verify
+python work.py --backend onnx --onnx-model artifacts/dualtac_v6_fp32.onnx --source example.avi --headless --report runs/ort.json
+```
 
-Only start this project if you have a basic foundation in embedded systems. Don’t rush into unnecessary purchases!!!!!!
+`.onnx` 必须与 `.onnx.json` 成对复制。导出验证检查两个合成张量上的数值一致性；没有深度真值，不构成精度评测。CUDA provider 仅在已安装的 ORT 提供它时可选择；TensorRT engine 构建与板端性能验收仍需在目标环境完成。
 
-If you really need my help, please send me a private message on Douyin!!! Also, could you hit the star for this repository? Thanks a lot!!!
+## 测试与复现
 
-  
+不需要 PyTorch 或模型资产的管线测试：
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+已取得模型资产时，可启用真实 checkpoint 测试：
+
+```powershell
+$env:T7_DUALTAC_ROOT="D:\Desktop\DualTacV2"
+python -m unittest discover -s tests -v
+```
+
+CI 只运行公开、无权重测试。更多运行命令及计时边界见 [BENCHMARK.md](docs/BENCHMARK.md)。
+
+## 结果与待办
+
+[VALIDATION.md](docs/VALIDATION.md) 记录本次桌面 CPU/CUDA/ORT 运行结果，并链接原始 JSON。这里只记录已测量结果，B01 的实时相机 FPS、功耗、持续运行稳定性及真实场景深度误差仍需附对应板端报告。
+
+当前完成的是已有网络到可复核部署流程的接入；后续重点是 B01 同源视频基准、目标 TensorRT 引擎与真实近场适配。

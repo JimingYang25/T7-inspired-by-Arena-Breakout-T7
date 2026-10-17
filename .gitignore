@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+models/
+artifacts/
+runs/
+*.engine
+*.onnx
+*.npy
+*.npz
+# Existing tracked Depth Anything checkpoint is retained.
+*.pt
+*.pth
