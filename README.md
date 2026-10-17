@@ -48,31 +48,78 @@ That is, the visual neural network used in this project.
 
 
 # 2.0 文件传递和运行
-当你按照jetson nano b01的文档完成烧录以及支架的设计和固定后，再考虑进行这一步
 
-打开你本地电脑的终端(cmd）
+新版软件接入轻量 **DualTacV2 V6 深度模型（937,227 参数）**，网络输入为 **320×240 RGB**，解码范围为 **0.20–1.00 m**。显示颜色代表模型估计的近场深度；新版输出不具有红外测温含义。历史成品展示、原有物料清单和硬件说明保留在本页其他章节。
 
-Proceed to this step only after you finish flashing the system and designing and installing the bracket in accordance with the Jetson Nano B01 documentation.
-Open the terminal (cmd) on your local computer.
+完整运行与部署说明：[轻量部署指南](docs/DEPLOYMENT.md) · [Jetson Nano B01 环境](docs/JETSON.md) · [性能测量口径](docs/BENCHMARK.md) · [本机验收结果](docs/VALIDATION.md)。
 
-输入(key in):
-```cmd
-scp <Windows下载目录>/T7-inspired-by-Arena-Breakout-T7-main.zip jetson的用户名@<Jetson IP地址>:<Jetson目标路径>
-```
+## 2.1 获取代码和准备环境
 
-然后开机jetson nano b01 , 在它的终端里输入(Then power on the Jetson Nano B01 and type commands in its terminal):
+在电脑或 Jetson 的终端运行：
+
 ```bash
-unzip <Jetson目标路径> <解压后目标路径>
-
-cd <解压后目标路径>/T7-inspired-by-Arena-Breakout-T7-main
-
-#在你python前需要安装pytorch,opencv2
-python3 ./work.py
+git clone https://github.com/JimingYang25/T7-inspired-by-Arena-Breakout-T7.git
+cd T7-inspired-by-Arena-Breakout-T7
+python3 -m pip install -r requirements.txt
+python3 work.py --help
 ```
 
-然后你就可以看到一个深度图像窗口 Then you can see a depth image window
+PyTorch 请使用与当前设备、Python 和 JetPack 匹配的版本。Jetson Nano B01 与 Orin Nano 的软件包不能混用。无桌面环境可使用 `opencv-python-headless` 替代 `opencv-python`，运行时增加 `--headless`。
+
+当前轻量模型的源码和训练权重由本地 DualTacV2 工程提供，本次仓库不分发这些资产。需要的文件是 `src/depth_encoder_decoder.py` 与 `checkpoints/depth_pretrained.pt`。
+
+## 2.2 使用本地轻量网络运行
+
+Windows 开发机：
+
+```powershell
+python work.py --dualtac-root "D:\Desktop\DualTacV2" --source 0 --device cuda --report runs/camera.json
+```
+
+Jetson 已有可用的模型与 PyTorch 环境时：
+
+```bash
+python3 work.py --dualtac-root /path/to/DualTacV2 --source 0 --device cuda --report runs/camera.json
+```
+
+按 `q` 或 `Esc` 退出。使用 `--source example.jpg` 或 `--source example.avi` 可处理图片或视频；`--frames 300` 限定测量帧数。摄像头的 `--width`、`--height` 与模型固定输入尺寸分别记录。
+
+无窗口录像与数值输出示例：
+
+```bash
+python3 work.py --dualtac-root /path/to/DualTacV2 --source example.avi --headless --output runs/preview.avi --save-depth runs/last_depth.npz --report runs/video.json
+```
+
+原版运行画面（Depth Anything 历史版本，保留展示链接）：
 
 <img width="1039" height="681" alt="b6695460d689a4241c00e39beee48bb2" src="https://github.com/user-attachments/assets/186c5e4d-150d-4638-a2f6-37efb27b567b" />
+
+## 2.3 导出 ONNX 在目标设备推理
+
+先在具备模型资产的开发机导出：
+
+```bash
+python -m pip install -r requirements-onnx.txt
+python -m t7_vision.export --dualtac-root /path/to/DualTacV2 --output artifacts/dualtac_v6_fp32.onnx --verify
+```
+
+将 `.onnx` 与同名 `.onnx.json` 一起复制到目标设备。目标设备需要安装与其环境匹配的 ONNX Runtime，然后运行：
+
+```bash
+python3 work.py --backend onnx --onnx-model artifacts/dualtac_v6_fp32.onnx --source 0 --report runs/ort_camera.json
+```
+
+默认使用 CPU provider。只有已安装的运行库明确提供 CUDA provider 时，才能选择 `--provider CUDAExecutionProvider`。详细步骤见 [Jetson 部署说明](docs/JETSON.md)。
+
+## 2.4 性能记录与测试
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+报告保留每帧耗时、mean/p50/p95、pipeline FPS、软件环境和模型校验值。公开 CI 不需要私有模型资产；有本地权重时可启用额外集成测试。
+
+当前 [验收结果](docs/VALIDATION.md) 来自桌面合成视频运行，不代表 B01 的真实相机性能或新场景深度精度。板端延迟、功耗和真实近场标定需单独测量。
 
 # 3.0 补充和提示 finally and hints
 

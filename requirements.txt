@@ -1,0 +1,3 @@
+# Install PyTorch separately using the wheel matching your target device.
+numpy>=1.19
+opencv-python>=4.5
